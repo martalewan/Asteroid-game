@@ -1,5 +1,5 @@
 import { Asteroid } from "./game/Asteroid";
-import { isObjectCollision } from "./game/collision";
+import { updateAsteroids } from "./game/handlers/asteroidHandler";
 import { updateBullets } from "./game/handlers/bulletHandler";
 import { bindInput } from "./game/handlers/inputHandler";
 import { updateShip } from "./game/handlers/shipHandler";
@@ -10,7 +10,9 @@ import { createGameState } from "./game/state";
 export function startGame(canvas: HTMLCanvasElement) {
     const gameState = createGameState();
 
-    let canTakeDamage = true;
+    const damageState = {
+        canTakeDamage: true,
+    };
     const bullets: any[] = [];
     const asteroids: any[] = [];
 
@@ -45,35 +47,13 @@ export function startGame(canvas: HTMLCanvasElement) {
 
         updateBullets(bullets, canvas);
 
-        for (let i = asteroids.length - 1; i >= 0; i--) {
-            asteroids[i].update();
-
-            if (isObjectCollision(ship, asteroids[i]) && canTakeDamage) {
-                ship.exploding = true;
-                gameState.addLifeLost();
-
-                canTakeDamage = false;
-
-                setTimeout(() => {
-                    canTakeDamage = true;
-                }, 3000);
-            }
-
-            for (let j = bullets.length - 1; j >= 0; j--) {
-                if (isObjectCollision(bullets[j], asteroids[i])) {
-                    bullets.splice(j, 1);
-
-                    if (asteroids[i].radius > 40) {
-                        asteroids[i].split();
-                    } else {
-                        gameState.addKill();
-                    }
-
-                    asteroids.splice(i, 1);
-                    break;
-                }
-            }
-        }
+        updateAsteroids(
+            asteroids,
+            ship,
+            bullets,
+            gameState,
+            damageState
+        );
     }
 
     // ASTEROID SPAWN
