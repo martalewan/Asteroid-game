@@ -1,8 +1,7 @@
 import { Asteroid } from "./game/Asteroid";
-import { Bullet } from "./game/Bullet";
 import { isObjectCollision } from "./game/collision";
-import { config } from "./game/config";
-import { bindInput } from "./game/handlers/inputHanler";
+import { bindInput } from "./game/handlers/inputHandler";
+import { updateShip } from "./game/handlers/shipHandler";
 import { createInputState } from "./game/inputState";
 import { Ship } from "./game/Ship";
 import { createGameState } from "./game/state";
@@ -29,54 +28,20 @@ export function startGame(canvas: HTMLCanvasElement) {
         velocity: { x: 0, y: 0 },
     });
 
-    function handleKeyPressEvents() {
-        if (ship.exploding) return;
-
-        if (input.ArrowUp) {
-            ship.velocity.x = Math.cos(ship.rotation) * config.VELOCITY_SPEED;
-            ship.velocity.y = Math.sin(ship.rotation) * config.VELOCITY_SPEED;
-
-            if (ship.position.x < 0) ship.position.x = canvas.width;
-            if (ship.position.x > canvas.width) ship.position.x = 0;
-            if (ship.position.y < 0) ship.position.y = canvas.height;
-            if (ship.position.y > canvas.height) ship.position.y = 0;
-        } else {
-            ship.velocity.x *= config.VELOCITY_SLOWING;
-            ship.velocity.y *= config.VELOCITY_SLOWING;
-        }
-
-        if (input.ArrowRight) ship.rotation += config.ROTATION_SPEED;
-        if (input.ArrowLeft) ship.rotation -= config.ROTATION_SPEED;
-
-        if (input.Space) {
-            bullets.push(
-                new Bullet({
-                    ctx,
-                    position: {
-                        x: ship.position.x + Math.cos(ship.rotation) * 30,
-                        y: ship.position.y + Math.sin(ship.rotation) * 30,
-                    },
-                    velocity: {
-                        x: Math.cos(ship.rotation) * 8,
-                        y: Math.sin(ship.rotation) * 8,
-                    },
-                })
-            );
-
-            input.Space = false;
-        }
-    }
-
     function animate() {
         requestAnimationFrame(animate);
 
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        handleKeyPressEvents();
-        ship.update();
+        updateShip({
+            ship,
+            input,
+            bullets,
+            ctx,
+            canvas,
+        }); ship.update();
 
-        // BULLETS (UNCHANGED)
         for (let i = bullets.length - 1; i >= 0; i--) {
             bullets[i].update();
 
@@ -101,7 +66,7 @@ export function startGame(canvas: HTMLCanvasElement) {
 
                 setTimeout(() => {
                     canTakeDamage = true;
-                }, 1000);
+                }, 3000);
             }
 
             for (let j = bullets.length - 1; j >= 0; j--) {
