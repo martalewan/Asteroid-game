@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
+import type { GameStateData } from "../game/gameEngine";
 
-export function HUD({ game }: { game: any }) {
+type HUDGame = {
+    gameState: GameStateData;
+    subscribe: (listener: () => void) => () => void;
+};
+
+export function HUD({ game }: { game: HUDGame }) {
     const [state, setState] = useState(game.gameState);
 
     useEffect(() => {
         return game.subscribe(() => {
-            setState({ ...game.gameState });
+            setState(game.gameState)
         });
     }, [game]);
 

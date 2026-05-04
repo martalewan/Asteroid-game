@@ -1,6 +1,6 @@
-import type { KeyMap } from "../game.types";
+import type { InputState } from "../game.types";
 
-export function bindInput(keys: KeyMap) {
+export function bindInput(keys: InputState) {
     function onKeyDown(event: KeyboardEvent) {
         switch (event.key) {
             case "ArrowUp":
@@ -38,7 +38,6 @@ export function bindInput(keys: KeyMap) {
     document.addEventListener("keydown", onKeyDown);
     document.addEventListener("keyup", onKeyUp);
 
-    // optional cleanup (good practice)
     return function unbind() {
         document.removeEventListener("keydown", onKeyDown);
         document.removeEventListener("keyup", onKeyUp);

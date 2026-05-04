@@ -1,11 +1,15 @@
+import type { Asteroid } from "../Asteroid";
+import type { Bullet } from "../Bullet";
 import { isObjectCollision } from "../collision";
+import type { DamageState, GameActions } from "../game.types";
+import type { Ship } from "../Ship";
 
 export function updateAsteroids(
-    asteroids: any[],
-    ship: any,
-    bullets: any[],
-    gameState: any,
-    damageState: { canTakeDamage: boolean }
+    asteroids: Asteroid[],
+    ship: Ship,
+    bullets: Bullet[],
+    gameActions: GameActions,
+    damageState: DamageState
 ) {
     let hitThisFrame = false;
 
@@ -23,7 +27,7 @@ export function updateAsteroids(
             damageState.canTakeDamage
         ) {
             ship.exploding = true;
-            gameState.addLifeLost();
+            gameActions.addLifeLost();
 
             damageState.canTakeDamage = false;
             hitThisFrame = true;
@@ -43,7 +47,7 @@ export function updateAsteroids(
                 if (asteroid.radius > 40) {
                     asteroid.split();
                 } else {
-                    gameState.addKill();
+                    gameActions.addKill();
                 }
 
                 asteroids.splice(i, 1);

@@ -1,11 +1,23 @@
 import { Bullet } from "../Bullet";
+import type { Ship } from "../Ship";
+
+export type InputState = {
+    Space: boolean;
+};
+
+type UpdateShipParams = {
+    ship: Ship;
+    input: InputState;
+    bullets: Bullet[];
+    ctx: CanvasRenderingContext2D;
+};
 
 export function updateShip({
     ship,
     input,
     bullets,
     ctx,
-}: any) {
+}: UpdateShipParams) {
     if (ship.exploding) return;
 
     if (input.Space) {

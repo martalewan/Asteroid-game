@@ -1,4 +1,4 @@
-type Listener = () => void;
+import type { Listener } from "./game.types";
 
 export function createGameState() {
     const state = {

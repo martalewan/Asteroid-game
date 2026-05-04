@@ -1,7 +1,7 @@
 import { createGame } from "./createGame";
 
 export function createGameApp(canvas: HTMLCanvasElement) {
-    let game: any = null;
+    let game: ReturnType<typeof createGame> | null = null;
 
     function init() {
         game = createGame(canvas);

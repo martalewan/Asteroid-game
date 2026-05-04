@@ -3,7 +3,7 @@ import { Asteroid } from "../Asteroid";
 type AsteroidSpawnerParams = {
     ctx: CanvasRenderingContext2D;
     canvas: HTMLCanvasElement;
-    asteroids: any[];
+    asteroids: Asteroid[];
 };
 
 export function createAsteroidSpawner(params: AsteroidSpawnerParams) {

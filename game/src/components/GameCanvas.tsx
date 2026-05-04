@@ -3,7 +3,7 @@ import { createGameApp } from "../game/createGameApp";
 
 export function GameCanvas() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const appRef = useRef<any>(null);
+    const appRef = useRef<ReturnType<typeof createGameApp> | null>(null);
 
     const [hud, setHud] = useState({
         asteroidsKilled: 0,

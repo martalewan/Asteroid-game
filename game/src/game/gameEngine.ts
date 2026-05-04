@@ -1,22 +1,5 @@
-type GameEngineParams = {
-    ctx: CanvasRenderingContext2D;
-    canvas: HTMLCanvasElement;
-    ship: any;
-    bullets: any[];
-    asteroids: any[];
-    gameState: any;
-    damageState: { canTakeDamage: boolean };
+import type { GameEngineParams } from "./game.types";
 
-    updateShip: () => void;
-    updateBullets: (bullets: any[], canvas: HTMLCanvasElement) => void;
-    updateAsteroids: (
-        asteroids: any[],
-        ship: any,
-        bullets: any[],
-        gameState: any,
-        damageState: { canTakeDamage: boolean }
-    ) => void;
-};
 export function createGameEngine(params: GameEngineParams) {
     const {
         ctx,

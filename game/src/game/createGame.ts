@@ -7,12 +7,15 @@ import { Ship } from "../game/Ship";
 import { createGameState } from "../game/state";
 import { createGameEngine } from "../game/gameEngine";
 import { createAsteroidSpawner } from "./handlers/asteroidSpawnerHandler";
+import type { Bullet } from "./Bullet";
+import type { Asteroid } from "./Asteroid";
+import type { Listener } from "./game.types";
 
 export function createGame(canvas: HTMLCanvasElement) {
     const gameState = createGameState();
 
-    const bullets: any[] = [];
-    const asteroids: any[] = [];
+    const bullets: Bullet[] = [];
+    const asteroids: Asteroid[] = [];
 
     const input = createInputState();
     bindInput(input);
@@ -44,7 +47,7 @@ export function createGame(canvas: HTMLCanvasElement) {
         gameState,
         damageState: { canTakeDamage: true },
         updateShip: () =>
-            updateShip({ ship, input, bullets, ctx, canvas }),
+            updateShip({ ship, input, bullets, ctx }),
         updateBullets,
         updateAsteroids,
     });
@@ -85,6 +88,6 @@ export function createGame(canvas: HTMLCanvasElement) {
         stop,
         reset,
         getState: () => gameState,
-        subscribe: (l: any) => gameState.subscribe(l),
+        subscribe: (l: Listener) => gameState.subscribe(l),
     };
 }

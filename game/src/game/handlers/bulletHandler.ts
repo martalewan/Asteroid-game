@@ -1,4 +1,6 @@
-export function updateBullets(bullets: any[], canvas: HTMLCanvasElement) {
+import type { Bullet } from "../Bullet";
+
+export function updateBullets(bullets: Bullet[], canvas: HTMLCanvasElement) {
     for (let i = bullets.length - 1; i >= 0; i--) {
         const bullet = bullets[i];
 

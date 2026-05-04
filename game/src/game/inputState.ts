@@ -1,6 +1,6 @@
-import type { KeyMap } from "./game.types";
+import type { InputState } from "./game.types";
 
-export function createInputState(): KeyMap {
+export function createInputState(): InputState {
     return {
         ArrowUp: false,
         ArrowDown: false,

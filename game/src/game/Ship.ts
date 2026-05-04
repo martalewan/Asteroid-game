@@ -1,5 +1,5 @@
 import { config } from "./config";
-import type { Vec2, KeyMap } from "./game.types";
+import type { Vec2, InputState } from "./game.types";
 
 export class Ship {
     position: Vec2;
@@ -10,12 +10,12 @@ export class Ship {
     explosionStartTime: number | null;
     ctx: CanvasRenderingContext2D;
     canvas: HTMLCanvasElement;
-    input: KeyMap;
+    input: InputState;
 
     constructor(params: {
         ctx: CanvasRenderingContext2D;
         canvas: HTMLCanvasElement;
-        input: KeyMap;
+        input: InputState;
         position: Vec2;
         velocity: Vec2;
     }) {
