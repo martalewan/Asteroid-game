@@ -33,6 +33,15 @@ export class Ship {
         this.explosionStartTime = null;
     }
 
+    reset(position: Vec2) {
+        this.position = position;
+        this.velocity = { x: 0, y: 0 };
+        this.rotation = 0;
+
+        this.exploding = false;
+        this.explosionStartTime = null;
+    }
+
     draw(): void {
         const ctx = this.ctx;
 

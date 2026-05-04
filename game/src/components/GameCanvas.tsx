@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { createGameApp } from "../game/GameApp";
+import { createGameApp } from "../game/createGameApp";
 
 export function GameCanvas() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -32,7 +32,6 @@ export function GameCanvas() {
         <div style={{ position: "relative" }}>
             <canvas ref={canvasRef} />
 
-            {/* HUD */}
             <div
                 style={{
                     position: "absolute",

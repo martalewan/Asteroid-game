@@ -8,7 +8,7 @@ import { createGameState } from "../game/state";
 import { createGameEngine } from "../game/gameEngine";
 import { createAsteroidSpawner } from "./handlers/asteroidSpawnerHandler";
 
-export function startGame(canvas: HTMLCanvasElement) {
+export function createGame(canvas: HTMLCanvasElement) {
     const gameState = createGameState();
 
     const bullets: any[] = [];
@@ -29,20 +29,12 @@ export function startGame(canvas: HTMLCanvasElement) {
         velocity: { x: 0, y: 0 },
     });
 
-    // -------------------------
-    // SPAWNER
-    // -------------------------
     const spawner = createAsteroidSpawner({
         ctx,
         canvas,
         asteroids,
     });
 
-    spawner.start(2500);
-
-    // -------------------------
-    // ENGINE
-    // -------------------------
     const engine = createGameEngine({
         ctx,
         canvas,
@@ -50,51 +42,49 @@ export function startGame(canvas: HTMLCanvasElement) {
         bullets,
         asteroids,
         gameState,
-
         damageState: { canTakeDamage: true },
-
         updateShip: () =>
-            updateShip({
-                ship,
-                input,
-                bullets,
-                ctx,
-                canvas,
-            }),
-
+            updateShip({ ship, input, bullets, ctx, canvas }),
         updateBullets,
         updateAsteroids,
     });
 
-    engine.start();
+    let started = false;
+
+    function start() {
+        if (started) return;
+        started = true;
+
+        engine.start();
+        spawner.start(2500);
+    }
+
+    function stop() {
+        if (!started) return;
+        started = false;
+
+        engine.stop();
+        spawner.stop?.();
+    }
+
+    function reset() {
+        stop();
+
+        bullets.length = 0;
+        asteroids.length = 0;
+        gameState.reset?.();
+        ship.reset({
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+        });
+        engine.renderOnce();
+    }
 
     return {
-        start: () => {
-            engine.start();
-            spawner.start(2500);
-        },
-
-        stop: () => {
-            engine.stop();
-            spawner.stop?.();
-        },
-
-        reset: () => {
-            engine.stop();
-            spawner.stop?.();
-
-            bullets.length = 0;
-            asteroids.length = 0;
-
-            gameState.getState().asteroidsKilled = 0;
-            gameState.getState().lostLives = 0;
-
-            engine.start();
-            spawner.start(2500);
-        },
-
+        start,
+        stop,
+        reset,
         getState: () => gameState,
-
-        subscribe: (listener: any) => gameState.subscribe(listener),
+        subscribe: (l: any) => gameState.subscribe(l),
     };
 }

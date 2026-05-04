@@ -64,16 +64,16 @@ export function createAsteroidSpawner(params: AsteroidSpawnerParams) {
     }
 
     function start(interval = 2500) {
-        if (intervalId !== null) return;
+        if (intervalId) return;
 
         intervalId = setInterval(spawn, interval);
     }
 
     function stop() {
-        if (intervalId !== null) {
-            clearInterval(intervalId);
-            intervalId = null;
-        }
+        if (!intervalId) return;
+
+        clearInterval(intervalId);
+        intervalId = null;
     }
 
     return {

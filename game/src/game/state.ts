@@ -35,10 +35,17 @@ export function createGameState() {
         };
     }
 
+    function reset() {
+        state.asteroidsKilled = 0;
+        state.lostLives = 0;
+        notify();
+    }
+
     return {
         getState,
         subscribe,
         addKill,
         addLifeLost,
+        reset
     };
 }

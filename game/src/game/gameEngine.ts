@@ -17,7 +17,6 @@ type GameEngineParams = {
         damageState: { canTakeDamage: boolean }
     ) => void;
 };
-
 export function createGameEngine(params: GameEngineParams) {
     const {
         ctx,
@@ -26,18 +25,19 @@ export function createGameEngine(params: GameEngineParams) {
         bullets,
         asteroids,
         gameState,
-        damageState, // ✅ FIX: you forgot this
+        damageState,
         updateShip,
         updateBullets,
         updateAsteroids,
     } = params;
 
     let running = false;
+    let rafId: number | null = null;
 
-    function loop() {
+    function tick() {
         if (!running) return;
 
-        requestAnimationFrame(loop);
+        rafId = requestAnimationFrame(tick);
 
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -56,14 +56,39 @@ export function createGameEngine(params: GameEngineParams) {
         );
     }
 
-    return {
-        start() {
-            running = true;
-            loop();
-        },
+    function start() {
+        if (running) return;
+        running = true;
+        tick();
+    }
 
-        stop() {
-            running = false;
-        },
+    function stop() {
+        running = false;
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = null;
+    }
+
+    function renderOnce() {
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        updateShip();
+        ship.update();
+
+        updateBullets(bullets, canvas);
+
+        updateAsteroids(
+            asteroids,
+            ship,
+            bullets,
+            gameState,
+            damageState
+        );
+    }
+
+    return {
+        start,
+        stop,
+        renderOnce,
     };
 }
