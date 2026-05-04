@@ -1,5 +1,6 @@
 import { Asteroid } from "./game/Asteroid";
 import { isObjectCollision } from "./game/collision";
+import { updateBullets } from "./game/handlers/bulletHandler";
 import { bindInput } from "./game/handlers/inputHandler";
 import { updateShip } from "./game/handlers/shipHandler";
 import { createInputState } from "./game/inputState";
@@ -42,18 +43,7 @@ export function startGame(canvas: HTMLCanvasElement) {
             canvas,
         }); ship.update();
 
-        for (let i = bullets.length - 1; i >= 0; i--) {
-            bullets[i].update();
-
-            if (
-                bullets[i].position.x < 0 ||
-                bullets[i].position.x > canvas.width ||
-                bullets[i].position.y < 0 ||
-                bullets[i].position.y > canvas.height
-            ) {
-                bullets.splice(i, 1);
-            }
-        }
+        updateBullets(bullets, canvas);
 
         for (let i = asteroids.length - 1; i >= 0; i--) {
             asteroids[i].update();
