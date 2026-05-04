@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { startGame } from "../game/startGame";
+import { createGameApp } from "../game/GameApp";
 
 export function GameCanvas() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const gameRef = useRef<any>(null);
+    const appRef = useRef<any>(null);
 
     const [hud, setHud] = useState({
         asteroidsKilled: 0,
@@ -13,21 +13,26 @@ export function GameCanvas() {
     useEffect(() => {
         if (!canvasRef.current) return;
 
-        const game = startGame(canvasRef.current);
-        gameRef.current = game;
+        const app = createGameApp(canvasRef.current);
+        appRef.current = app;
 
-        const unsubscribe = game.subscribe(() => {
-            setHud({ ...game.getState() });
+        app.init();
+
+        const unsubscribe = app.getState().subscribe(() => {
+            setHud({ ...app.getState().getState() });
         });
 
-        return () => unsubscribe();
+        return () => {
+            unsubscribe();
+            app.stop();
+        };
     }, []);
 
     return (
         <div style={{ position: "relative" }}>
             <canvas ref={canvasRef} />
 
-            {/* HUD LAYER */}
+            {/* HUD */}
             <div
                 style={{
                     position: "absolute",
@@ -39,6 +44,21 @@ export function GameCanvas() {
             >
                 <div>ASTEROIDS: {hud.asteroidsKilled}</div>
                 <div>LIVES: {hud.lostLives}</div>
+
+                {/* CONTROLS */}
+                <div style={{ marginTop: 10, display: "flex", gap: 5 }}>
+                    <button onClick={() => appRef.current?.start()}>
+                        Start
+                    </button>
+
+                    <button onClick={() => appRef.current?.stop()}>
+                        Stop
+                    </button>
+
+                    <button onClick={() => appRef.current?.reset()}>
+                        Reset
+                    </button>
+                </div>
             </div>
         </div>
     );

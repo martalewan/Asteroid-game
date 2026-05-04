@@ -26,9 +26,9 @@ export const config = {
         FLAME_HEIGHT: 15,
         FLAME_OFFSET: 35,
 
-        VELOCITY_SPEED: 8,
+        VELOCITY_SPEED: 6,
         VELOCITY_SLOWING: 0.9,
-        ROTATION_SPEED: 0.2,
+        ROTATION_SPEED: 0.15,
         EXPLODE_DURATION: 3000,
     },
 

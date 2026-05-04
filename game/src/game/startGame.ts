@@ -68,5 +68,33 @@ export function startGame(canvas: HTMLCanvasElement) {
 
     engine.start();
 
-    return gameState;
+    return {
+        start: () => {
+            engine.start();
+            spawner.start(2500);
+        },
+
+        stop: () => {
+            engine.stop();
+            spawner.stop?.();
+        },
+
+        reset: () => {
+            engine.stop();
+            spawner.stop?.();
+
+            bullets.length = 0;
+            asteroids.length = 0;
+
+            gameState.getState().asteroidsKilled = 0;
+            gameState.getState().lostLives = 0;
+
+            engine.start();
+            spawner.start(2500);
+        },
+
+        getState: () => gameState,
+
+        subscribe: (listener: any) => gameState.subscribe(listener),
+    };
 }

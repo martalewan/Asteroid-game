@@ -9,6 +9,8 @@ type AsteroidSpawnerParams = {
 export function createAsteroidSpawner(params: AsteroidSpawnerParams) {
     const { ctx, canvas, asteroids } = params;
 
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+
     function createAsteroidCoordinate(index: number, radius: number) {
         let x = 0,
             y = 0,
@@ -62,11 +64,21 @@ export function createAsteroidSpawner(params: AsteroidSpawnerParams) {
     }
 
     function start(interval = 2500) {
-        return setInterval(spawn, interval);
+        if (intervalId !== null) return;
+
+        intervalId = setInterval(spawn, interval);
+    }
+
+    function stop() {
+        if (intervalId !== null) {
+            clearInterval(intervalId);
+            intervalId = null;
+        }
     }
 
     return {
         start,
+        stop,
         spawn,
     };
 }
