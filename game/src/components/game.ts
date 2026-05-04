@@ -1,3 +1,4 @@
+import { Asteroid } from "./game/Asteroid";
 import { Bullet } from "./game/Bullet";
 import { createInput } from "./game/input";
 import type { KeyMap, Vec2 } from "./game/state";
@@ -27,11 +28,6 @@ export function startGame(canvas: HTMLCanvasElement) {
     const VELOCITY_SPEED = 8;
     const ROTATION_SPEED = 0.2;
     const SHIP_EXPLODE_DURATION = 3000;
-
-    // ASTEROID
-    const MIN_SIDES = 5;
-    const MAX_SIDES = 10;
-    const STROKE_COLOR = "white";
 
     // =========================
     // STATE
@@ -193,94 +189,6 @@ export function startGame(canvas: HTMLCanvasElement) {
     }
 
     // =========================
-    // ASTEROID
-    // =========================
-    class Asteroid {
-        ctx: CanvasRenderingContext2D;
-        position: Vec2;
-        velocity: Vec2;
-        radius: number;
-        sides: number;
-        angle: number;
-        jag: number;
-        offset: number[];
-
-        constructor({ ctx, position, velocity, radius }: any) {
-            this.ctx = ctx;
-            this.position = position;
-            this.velocity = velocity;
-            this.radius = radius;
-            this.sides = Math.floor(Math.random() * (MAX_SIDES - MIN_SIDES + 1)) + MIN_SIDES;
-            this.angle = Math.random() * FULL_CIRCLE_RADIANS;
-            this.jag = Math.random();
-            this.offset = this.createOffsetArray(this.jag);
-        }
-
-        createOffsetArray(jag: number): number[] {
-            const offset: number[] = [];
-            for (let i = 0; i < this.sides; i++) {
-                offset.push(Math.random() * jag * 2 + 1 - jag);
-            }
-            return offset;
-        }
-
-        draw(): void {
-            this.ctx.beginPath();
-
-            const startX = this.position.x + Math.cos(this.angle) * this.radius * this.offset[0];
-            const startY = this.position.y + Math.sin(this.angle) * this.radius * this.offset[0];
-
-            this.ctx.moveTo(startX, startY);
-
-            for (let i = 1; i < this.sides; i++) {
-                const x =
-                    this.position.x +
-                    Math.cos(this.angle + (i * FULL_CIRCLE_RADIANS) / this.sides) *
-                    this.radius *
-                    this.offset[i];
-
-                const y =
-                    this.position.y +
-                    Math.sin(this.angle + (i * FULL_CIRCLE_RADIANS) / this.sides) *
-                    this.radius *
-                    this.offset[i];
-
-                this.ctx.lineTo(x, y);
-            }
-
-            this.ctx.closePath();
-            this.ctx.strokeStyle = STROKE_COLOR;
-            this.ctx.stroke();
-        }
-
-        update(): void {
-            if (this.position.x < -this.radius) this.position.x = canvas.width + this.radius;
-            if (this.position.x > canvas.width + this.radius) this.position.x = -this.radius;
-            if (this.position.y < -this.radius) this.position.y = canvas.height + this.radius;
-            if (this.position.y > canvas.height + this.radius) this.position.y = -this.radius;
-            this.draw();
-            this.position.x += this.velocity.x;
-            this.position.y += this.velocity.y;
-        }
-
-        split(): void {
-            for (let i = 0; i < 2; i++) {
-                asteroids.push(
-                    new Asteroid({
-                        ctx,
-                        position: { ...this.position },
-                        velocity: {
-                            x: Math.random() * 2 - 1,
-                            y: Math.random() * 2 - 1,
-                        },
-                        radius: this.radius / 2,
-                    })
-                );
-            }
-        }
-    }
-
-    // =========================
     // GAME LOGIC (RESTORE THIS)
     // =========================
 
@@ -424,18 +332,22 @@ export function startGame(canvas: HTMLCanvasElement) {
     setInterval(() => {
         const asteroidRadius = Math.random() * 50 + 20;
 
-        const index = Math.floor(Math.random() * 4) + 1; // FIXED
+        const index = Math.floor(Math.random() * 4) + 1;
         const coords = createAsteroidCoordinate(index, asteroidRadius);
 
-        asteroids.push(new Asteroid({
-            ctx,
-            position: { x: coords.x, y: coords.y },
-            velocity: {
-                x: coords.vx * Math.random() * 1.3,
-                y: coords.vy * Math.random() * 1.3
-            },
-            radius: asteroidRadius
-        }));
+        asteroids.push(
+            new Asteroid({
+                ctx,
+                canvas,
+                asteroidsRef: asteroids,
+                position: { x: coords.x, y: coords.y },
+                velocity: {
+                    x: coords.vx * Math.random() * 1.3,
+                    y: coords.vy * Math.random() * 1.3,
+                },
+                radius: asteroidRadius,
+            })
+        );
     }, 2500);
 
     function isObjectCollision(obj1: any, obj2: any) {
