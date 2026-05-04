@@ -1,8 +1,5 @@
+import { config } from "./config";
 import type { Vec2 } from "./game.types";
-
-const HEART_SIZE = 10;
-const HEART_COLOR = "white";
-const BULLET_RADIUS = 3;
 
 export class Bullet {
     ctx: CanvasRenderingContext2D;
@@ -18,13 +15,13 @@ export class Bullet {
         this.ctx = params.ctx;
         this.position = params.position;
         this.velocity = params.velocity;
-        this.radius = BULLET_RADIUS;
+        this.radius = config.BULLET.RADIUS;
     }
 
     draw(): void {
         const x = this.position.x;
         const y = this.position.y;
-        const s = HEART_SIZE;
+        const s = config.BULLET.SIZE;
 
         this.ctx.beginPath();
 
@@ -43,7 +40,7 @@ export class Bullet {
         );
 
         this.ctx.closePath();
-        this.ctx.fillStyle = HEART_COLOR;
+        this.ctx.fillStyle = config.BULLET.COLOR;
         this.ctx.fill();
     }
 

@@ -1,10 +1,5 @@
+import { config } from "./config";
 import type { Vec2 } from "./game.types";
-
-const FULL_CIRCLE = 2 * Math.PI;
-
-const MIN_SIDES = 5;
-const MAX_SIDES = 10;
-const STROKE_COLOR = "white";
 
 export class Asteroid {
     ctx: CanvasRenderingContext2D;
@@ -36,8 +31,8 @@ export class Asteroid {
         this.canvas = params.canvas;
         this.asteroidsRef = params.asteroidsRef;
 
-        this.sides = Math.floor(Math.random() * (MAX_SIDES - MIN_SIDES + 1)) + MIN_SIDES;
-        this.angle = Math.random() * FULL_CIRCLE;
+        this.sides = Math.floor(Math.random() * (config.ASTEROID.MAX_SIDES - config.ASTEROID.MIN_SIDES + 1)) + config.ASTEROID.MIN_SIDES;
+        this.angle = Math.random() * config.MATH.FULL_CIRCLE;
         this.jag = Math.random();
         this.offset = this.createOffsetArray(this.jag);
     }
@@ -68,13 +63,13 @@ export class Asteroid {
         for (let i = 1; i < this.sides; i++) {
             const x =
                 this.position.x +
-                Math.cos(this.angle + (i * FULL_CIRCLE) / this.sides) *
+                Math.cos(this.angle + (i * config.MATH.FULL_CIRCLE) / this.sides) *
                 this.radius *
                 this.offset[i];
 
             const y =
                 this.position.y +
-                Math.sin(this.angle + (i * FULL_CIRCLE) / this.sides) *
+                Math.sin(this.angle + (i * config.MATH.FULL_CIRCLE) / this.sides) *
                 this.radius *
                 this.offset[i];
 
@@ -82,7 +77,7 @@ export class Asteroid {
         }
 
         this.ctx.closePath();
-        this.ctx.strokeStyle = STROKE_COLOR;
+        this.ctx.strokeStyle = config.ASTEROID.STROKE_COLOR;
         this.ctx.stroke();
     }
 

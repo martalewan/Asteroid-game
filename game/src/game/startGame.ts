@@ -6,7 +6,7 @@ import { createInputState } from "../game/inputState";
 import { Ship } from "../game/Ship";
 import { createGameState } from "../game/state";
 import { createGameEngine } from "../game/gameEngine";
-import { createAsteroidSpawner } from "../game/asteroidSpawner";
+import { createAsteroidSpawner } from "./handlers/asteroidSpawnerHandler";
 
 export function startGame(canvas: HTMLCanvasElement) {
     const gameState = createGameState();

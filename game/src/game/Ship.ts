@@ -1,40 +1,13 @@
+import { config } from "./config";
 import type { Vec2, KeyMap } from "./game.types";
-
-const FULL_CIRCLE = 2 * Math.PI;
-
-// SHIP CONSTANTS
-const SHIP_BODY_RADIUS = 20;
-const EYE_RADIUS = 4;
-const EYE_OFFSET_X = 8;
-const EYE_OFFSET_Y = 5;
-const MOUTH_RADIUS = 9;
-const MOUTH_OFFSET_Y = 5;
-
-const GUN_WIDTH = 15;
-const GUN_HEIGHT = 10;
-const GUN_OFFSET_X = 20;
-const GUN_BARREL_WIDTH = 3;
-const GUN_BARREL_OFFSET_X = 31;
-
-const FLAME_LENGTH = 30;
-const FLAME_HEIGHT = 15;
-const FLAME_OFFSET = 35;
-
-const VELOCITY_SLOWING = 0.9;
-const VELOCITY_SPEED = 8;
-const ROTATION_SPEED = 0.2;
-
-const SHIP_EXPLODE_DURATION = 3000;
 
 export class Ship {
     position: Vec2;
     velocity: Vec2;
     rotation: number;
     radius: number;
-
     exploding: boolean;
     explosionStartTime: number | null;
-
     ctx: CanvasRenderingContext2D;
     canvas: HTMLCanvasElement;
     input: KeyMap;
@@ -54,7 +27,7 @@ export class Ship {
         this.velocity = params.velocity;
 
         this.rotation = 0;
-        this.radius = SHIP_BODY_RADIUS;
+        this.radius = config.SHIP.BODY_RADIUS;
 
         this.exploding = false;
         this.explosionStartTime = null;
@@ -74,7 +47,7 @@ export class Ship {
         // BODY
         // =====================
         ctx.beginPath();
-        ctx.arc(this.position.x, this.position.y, SHIP_BODY_RADIUS, 0, FULL_CIRCLE);
+        ctx.arc(this.position.x, this.position.y, config.SHIP.BODY_RADIUS, 0, config.MATH.FULL_CIRCLE);
         ctx.fillStyle = "#ff66b2";
         ctx.fill();
         ctx.closePath();
@@ -86,22 +59,22 @@ export class Ship {
 
         ctx.beginPath();
         ctx.arc(
-            this.position.x - EYE_OFFSET_X,
-            this.position.y - EYE_OFFSET_Y,
-            EYE_RADIUS,
+            this.position.x - config.SHIP.EYE_OFFSET_X,
+            this.position.y - config.SHIP.EYE_OFFSET_Y,
+            config.SHIP.EYE_RADIUS,
             0,
-            FULL_CIRCLE
+            config.MATH.FULL_CIRCLE
         );
         ctx.fill();
         ctx.closePath();
 
         ctx.beginPath();
         ctx.arc(
-            this.position.x + EYE_OFFSET_X,
-            this.position.y - EYE_OFFSET_Y,
-            EYE_RADIUS,
+            this.position.x + config.SHIP.EYE_OFFSET_X,
+            this.position.y - config.SHIP.EYE_OFFSET_Y,
+            config.SHIP.EYE_RADIUS,
             0,
-            FULL_CIRCLE
+            config.MATH.FULL_CIRCLE
         );
         ctx.fill();
         ctx.closePath();
@@ -115,8 +88,8 @@ export class Ship {
         ctx.beginPath();
         ctx.arc(
             this.position.x,
-            this.position.y + MOUTH_OFFSET_Y,
-            MOUTH_RADIUS,
+            this.position.y + config.SHIP.MOUTH_OFFSET_Y,
+            config.SHIP.MOUTH_RADIUS,
             0,
             Math.PI
         );
@@ -130,10 +103,10 @@ export class Ship {
 
         ctx.beginPath();
         ctx.rect(
-            this.position.x + GUN_OFFSET_X,
-            this.position.y - GUN_HEIGHT / 2,
-            GUN_WIDTH,
-            GUN_HEIGHT
+            this.position.x + config.SHIP.GUN_OFFSET_X,
+            this.position.y - config.SHIP.GUN_HEIGHT / 2,
+            config.SHIP.GUN_WIDTH,
+            config.SHIP.GUN_HEIGHT
         );
         ctx.fill();
         ctx.closePath();
@@ -142,12 +115,12 @@ export class Ship {
         // BARREL
         // =====================
         ctx.strokeStyle = "red";
-        ctx.lineWidth = GUN_BARREL_WIDTH;
+        ctx.lineWidth = config.SHIP.GUN_BARREL_WIDTH;
 
         ctx.beginPath();
-        ctx.moveTo(this.position.x + GUN_BARREL_OFFSET_X, this.position.y);
+        ctx.moveTo(this.position.x + config.SHIP.GUN_BARREL_OFFSET_X, this.position.y);
         ctx.lineTo(
-            this.position.x + GUN_BARREL_OFFSET_X + GUN_BARREL_WIDTH,
+            this.position.x + config.SHIP.GUN_BARREL_OFFSET_X + config.SHIP.GUN_BARREL_WIDTH,
             this.position.y
         );
         ctx.stroke();
@@ -163,16 +136,16 @@ export class Ship {
 
         // MOVE
         if (input.ArrowUp) {
-            this.velocity.x = Math.cos(this.rotation) * VELOCITY_SPEED;
-            this.velocity.y = Math.sin(this.rotation) * VELOCITY_SPEED;
+            this.velocity.x = Math.cos(this.rotation) * config.SHIP.VELOCITY_SPEED;
+            this.velocity.y = Math.sin(this.rotation) * config.SHIP.VELOCITY_SPEED;
         } else {
-            this.velocity.x *= VELOCITY_SLOWING;
-            this.velocity.y *= VELOCITY_SLOWING;
+            this.velocity.x *= config.SHIP.VELOCITY_SLOWING;
+            this.velocity.y *= config.SHIP.VELOCITY_SLOWING;
         }
 
         // ROTATION
-        if (input.ArrowRight) this.rotation += ROTATION_SPEED;
-        if (input.ArrowLeft) this.rotation -= ROTATION_SPEED;
+        if (input.ArrowRight) this.rotation += config.SHIP.ROTATION_SPEED;
+        if (input.ArrowLeft) this.rotation -= config.SHIP.ROTATION_SPEED;
 
         // POSITION
         this.position.x += this.velocity.x;
@@ -195,9 +168,9 @@ export class Ship {
             ctx.fillStyle = "orange";
 
             ctx.beginPath();
-            ctx.moveTo(-FLAME_OFFSET, -FLAME_HEIGHT / 2);
-            ctx.lineTo(-FLAME_OFFSET - FLAME_LENGTH, 0);
-            ctx.lineTo(-FLAME_OFFSET, FLAME_HEIGHT / 2);
+            ctx.moveTo(-config.SHIP.FLAME_OFFSET, -config.SHIP.FLAME_HEIGHT / 2);
+            ctx.lineTo(-config.SHIP.FLAME_OFFSET - config.SHIP.FLAME_LENGTH, 0);
+            ctx.lineTo(-config.SHIP.FLAME_OFFSET, config.SHIP.FLAME_HEIGHT / 2);
             ctx.closePath();
             ctx.fill();
 
@@ -214,7 +187,7 @@ export class Ship {
             this.velocity.y = 0;
 
             const elapsed = Date.now() - this.explosionStartTime;
-            const radius = this.radius + (elapsed / SHIP_EXPLODE_DURATION) * 60;
+            const radius = this.radius + (elapsed / config.SHIP.EXPLODE_DURATION) * 60;
 
             const ctx = this.ctx;
 
@@ -232,11 +205,11 @@ export class Ship {
             gradient.addColorStop(1, "transparent");
 
             ctx.beginPath();
-            ctx.arc(this.position.x, this.position.y, radius, 0, FULL_CIRCLE);
+            ctx.arc(this.position.x, this.position.y, radius, 0, config.MATH.FULL_CIRCLE);
             ctx.fillStyle = gradient;
             ctx.fill();
 
-            if (elapsed > SHIP_EXPLODE_DURATION) {
+            if (elapsed > config.SHIP.EXPLODE_DURATION) {
                 this.exploding = false;
                 this.explosionStartTime = null;
 
