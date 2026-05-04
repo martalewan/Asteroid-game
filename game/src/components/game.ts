@@ -1,33 +1,16 @@
 import { Asteroid } from "./game/Asteroid";
 import { Bullet } from "./game/Bullet";
 import { createInput } from "./game/input";
-import type { KeyMap, Vec2 } from "./game/state";
+import { Ship } from "./game/Ship";
 
 export function startGame(canvas: HTMLCanvasElement) {
     // =========================
     // CONSTANTS
     // =========================
-    const FULL_CIRCLE_RADIANS = 2 * Math.PI;
 
-    // SHIP
-    const SHIP_BODY_RADIUS = 20;
-    const EYE_RADIUS = 4;
-    const EYE_OFFSET_X = 8;
-    const EYE_OFFSET_Y = 5;
-    const MOUTH_RADIUS = 9;
-    const MOUTH_OFFSET_Y = 5;
-    const GUN_WIDTH = 15;
-    const GUN_HEIGHT = 10;
-    const GUN_OFFSET_X = 20;
-    const GUN_BARREL_WIDTH = 3;
-    const GUN_BARREL_OFFSET_X = 31;
-    const FLAME_LENGTH = 30;
-    const FLAME_HEIGHT = 15;
-    const FLAME_OFFSET = 35;
     const VELOCITY_SLOWING = 0.9;
     const VELOCITY_SPEED = 8;
     const ROTATION_SPEED = 0.2;
-    const SHIP_EXPLODE_DURATION = 3000;
 
     // =========================
     // STATE
@@ -53,146 +36,13 @@ export function startGame(canvas: HTMLCanvasElement) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // =========================
-    // SHIP
-    // =========================
-    class Ship {
-        position: Vec2;
-        velocity: Vec2;
-        rotation: number;
-        radius: number;
-        exploding: boolean;
-        explosionStartTime: number | null;
-
-        constructor({ position, velocity }: { position: Vec2; velocity: Vec2 }) {
-            this.position = position;
-            this.velocity = velocity;
-            this.rotation = 0;
-            this.radius = SHIP_BODY_RADIUS;
-            this.exploding = false;
-            this.explosionStartTime = null;
-        }
-
-        draw(): void {
-            ctx.save();
-            ctx.translate(this.position.x, this.position.y);
-            ctx.rotate(this.rotation);
-            ctx.translate(-this.position.x, -this.position.y);
-
-            // BODY
-            ctx.beginPath();
-            ctx.arc(this.position.x, this.position.y, SHIP_BODY_RADIUS, 0, FULL_CIRCLE_RADIANS);
-            ctx.fillStyle = "#ff66b2";
-            ctx.fill();
-            ctx.closePath();
-
-            // EYES
-            ctx.beginPath();
-            ctx.arc(this.position.x - EYE_OFFSET_X, this.position.y - EYE_OFFSET_Y, EYE_RADIUS, 0, FULL_CIRCLE_RADIANS);
-            ctx.fillStyle = "black";
-            ctx.fill();
-            ctx.closePath();
-
-            ctx.beginPath();
-            ctx.arc(this.position.x + EYE_OFFSET_X, this.position.y - EYE_OFFSET_Y, EYE_RADIUS, 0, FULL_CIRCLE_RADIANS);
-            ctx.fillStyle = "black";
-            ctx.fill();
-            ctx.closePath();
-
-            // MOUTH
-            ctx.beginPath();
-            ctx.arc(this.position.x, this.position.y + MOUTH_OFFSET_Y, MOUTH_RADIUS, 0, Math.PI);
-            ctx.strokeStyle = "black";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.closePath();
-
-            // 🔥 GUN
-            ctx.beginPath();
-            ctx.rect(this.position.x + GUN_OFFSET_X, this.position.y - GUN_HEIGHT / 2, GUN_WIDTH, GUN_HEIGHT);
-            ctx.fillStyle = "gray";
-            ctx.fill();
-            ctx.closePath();
-
-            // 🔥 BARREL
-            ctx.beginPath();
-            ctx.moveTo(this.position.x + GUN_BARREL_OFFSET_X, this.position.y);
-            ctx.lineTo(this.position.x + GUN_BARREL_OFFSET_X + GUN_BARREL_WIDTH, this.position.y);
-            ctx.lineWidth = GUN_BARREL_WIDTH;
-            ctx.strokeStyle = "red";
-            ctx.stroke();
-            ctx.closePath();
-
-            ctx.restore();
-        }
-
-        update(): void {
-            this.draw();
-
-            this.position.x += this.velocity.x;
-            this.position.y += this.velocity.y;
-
-            // 🔥 FLAME
-            if (input.ArrowUp) {
-                ctx.save();
-                ctx.translate(this.position.x, this.position.y);
-                ctx.rotate(this.rotation);
-
-                ctx.beginPath();
-                ctx.moveTo(-FLAME_OFFSET, -FLAME_HEIGHT / 2);
-                ctx.lineTo(-FLAME_OFFSET - FLAME_LENGTH, 0);
-                ctx.lineTo(-FLAME_OFFSET, FLAME_HEIGHT / 2);
-                ctx.closePath();
-
-                ctx.fillStyle = "orange";
-                ctx.fill();
-                ctx.restore();
-            }
-
-            // 💥 EXPLOSION
-            if (this.exploding) {
-                if (!this.explosionStartTime) {
-                    this.explosionStartTime = Date.now();
-                }
-
-                this.velocity.x = 0;
-                this.velocity.y = 0;
-
-                const elapsed = Date.now() - this.explosionStartTime;
-                const radius = this.radius + (elapsed / SHIP_EXPLODE_DURATION) * 60;
-
-                const gradient = ctx.createRadialGradient(
-                    this.position.x, this.position.y, 0,
-                    this.position.x, this.position.y, radius
-                );
-
-                gradient.addColorStop(0, "yellow");
-                gradient.addColorStop(0.5, "red");
-                gradient.addColorStop(1, "transparent");
-
-                ctx.beginPath();
-                ctx.arc(this.position.x, this.position.y, radius, 0, FULL_CIRCLE_RADIANS);
-                ctx.fillStyle = gradient;
-                ctx.fill();
-
-                if (elapsed > SHIP_EXPLODE_DURATION) {
-                    this.exploding = false;
-                    this.explosionStartTime = null;
-
-                    // ✅ RESET POSITION (IMPORTANT FIX)
-                    this.position.x = canvas.width / 2;
-                    this.position.y = canvas.height / 2;
-                    this.velocity.x = 0;
-                    this.velocity.y = 0;
-                }
-            }
-        }
-    }
-
-    // =========================
     // GAME LOGIC (RESTORE THIS)
     // =========================
 
     const ship = new Ship({
+        ctx,
+        canvas,
+        input,
         position: { x: canvas.width / 2, y: canvas.height / 2 },
         velocity: { x: 0, y: 0 },
     });
