@@ -1,4 +1,4 @@
-import type { Vec2 } from "./state";
+import type { Vec2 } from "./game.types";
 
 const FULL_CIRCLE = 2 * Math.PI;
 

@@ -1,4 +1,4 @@
-import type { Vec2, KeyMap } from "./state";
+import type { Vec2, KeyMap } from "./game.types";
 
 const FULL_CIRCLE = 2 * Math.PI;
 

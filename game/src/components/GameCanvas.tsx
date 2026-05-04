@@ -5,7 +5,7 @@ export function GameCanvas() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const gameRef = useRef<any>(null);
 
-    const [state, setState] = useState({
+    const [hud, setHud] = useState({
         asteroidsKilled: 0,
         lostLives: 0,
     });
@@ -13,34 +13,33 @@ export function GameCanvas() {
     useEffect(() => {
         if (!canvasRef.current) return;
 
-        gameRef.current = startGame(canvasRef.current);
+        const game = startGame(canvasRef.current);
+        gameRef.current = game;
 
-        console.log("[REACT] game started", gameRef.current);
-
-        const unsubscribe = gameRef.current.subscribe(() => {
-            console.log("[REACT] subscribe triggered");
-            console.log("[REACT] gameState from engine:", gameRef.current.gameState);
-
-            setState({ ...gameRef.current.gameState });
-
-            console.log("[REACT] state updated in React:", gameRef.current.gameState);
+        const unsubscribe = game.subscribe(() => {
+            setHud({ ...game.getState() });
         });
 
         return () => unsubscribe();
     }, []);
 
-    useEffect(() => {
-        console.log("[REACT] render state:", state);
-    }, [state]);
-
     return (
-        <div>
-            <div style={{ position: "absolute", color: "white" }}>
-                Kills: {state.asteroidsKilled} <br />
-                Lives: {state.lostLives}
-            </div>
-
+        <div style={{ position: "relative" }}>
             <canvas ref={canvasRef} />
+
+            {/* HUD LAYER */}
+            <div
+                style={{
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    color: "white",
+                    fontFamily: "Arial",
+                }}
+            >
+                <div>ASTEROIDS: {hud.asteroidsKilled}</div>
+                <div>LIVES: {hud.lostLives}</div>
+            </div>
         </div>
     );
 }

@@ -1,16 +1,44 @@
-export type Vec2 = { x: number; y: number };
+type Listener = () => void;
 
-export type KeyMap = {
-    ArrowUp: boolean;
-    ArrowDown: boolean;
-    ArrowLeft: boolean;
-    ArrowRight: boolean;
-    Space?: boolean;
-};
+export function createGameState() {
+    const state = {
+        asteroidsKilled: 0,
+        lostLives: 0,
+    };
 
-export type GameState = {
-    bullets: any[];
-    asteroids: any[];
-    killed: number;
-    lives: number;
-};
+    const listeners: Listener[] = [];
+
+    function notify() {
+        listeners.forEach((l) => l());
+    }
+
+    function addKill() {
+        state.asteroidsKilled++;
+        notify();
+    }
+
+    function addLifeLost() {
+        state.lostLives++;
+        notify();
+    }
+
+    function getState() {
+        return state;
+    }
+
+    function subscribe(listener: Listener) {
+        listeners.push(listener);
+
+        return () => {
+            const i = listeners.indexOf(listener);
+            if (i !== -1) listeners.splice(i, 1);
+        };
+    }
+
+    return {
+        getState,
+        subscribe,
+        addKill,
+        addLifeLost,
+    };
+}

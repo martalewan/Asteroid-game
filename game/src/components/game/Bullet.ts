@@ -1,4 +1,4 @@
-import type { Vec2 } from "./state";
+import type { Vec2 } from "./game.types";
 
 const HEART_SIZE = 10;
 const HEART_COLOR = "white";
