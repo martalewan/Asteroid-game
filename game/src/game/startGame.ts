@@ -1,12 +1,12 @@
-import { bindInput } from "./game/handlers/inputHandler";
-import { updateShip } from "./game/handlers/shipHandler";
-import { updateBullets } from "./game/handlers/bulletHandler";
-import { updateAsteroids } from "./game/handlers/asteroidHandler";
-import { createInputState } from "./game/inputState";
-import { Ship } from "./game/Ship";
-import { createGameState } from "./game/state";
-import { createGameEngine } from "./game/gameEngine";
-import { createAsteroidSpawner } from "./game/asteroidSpawner";
+import { bindInput } from "../game/handlers/inputHandler";
+import { updateShip } from "../game/handlers/shipHandler";
+import { updateBullets } from "../game/handlers/bulletHandler";
+import { updateAsteroids } from "../game/handlers/asteroidHandler";
+import { createInputState } from "../game/inputState";
+import { Ship } from "../game/Ship";
+import { createGameState } from "../game/state";
+import { createGameEngine } from "../game/gameEngine";
+import { createAsteroidSpawner } from "../game/asteroidSpawner";
 
 export function startGame(canvas: HTMLCanvasElement) {
     const gameState = createGameState();
