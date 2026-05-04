@@ -1,3 +1,4 @@
+import { createInput } from "./game/input";
 import type { KeyMap, Vec2 } from "./game/state";
 
 export function startGame(canvas: HTMLCanvasElement) {
@@ -45,12 +46,8 @@ export function startGame(canvas: HTMLCanvasElement) {
     let asteroidsKilled = 0;
     let lostLives = 0;
 
-    const isKeyPressed: KeyMap = {
-        ArrowUp: false,
-        ArrowDown: false,
-        ArrowLeft: false,
-        ArrowRight: false,
-    };
+    const input = createInput();
+    input.bind();
 
     // =========================
     // CANVAS
@@ -143,7 +140,7 @@ export function startGame(canvas: HTMLCanvasElement) {
             this.position.y += this.velocity.y;
 
             // 🔥 FLAME
-            if (isKeyPressed.ArrowUp) {
+            if (input.ArrowUp) {
                 ctx.save();
                 ctx.translate(this.position.x, this.position.y);
                 ctx.rotate(this.rotation);
@@ -348,7 +345,7 @@ export function startGame(canvas: HTMLCanvasElement) {
     function handleKeyPressEvents() {
         if (ship.exploding) return;
 
-        if (isKeyPressed.ArrowUp) {
+        if (input.ArrowUp) {
             ship.velocity.x = Math.cos(ship.rotation) * VELOCITY_SPEED;
             ship.velocity.y = Math.sin(ship.rotation) * VELOCITY_SPEED;
 
@@ -361,10 +358,10 @@ export function startGame(canvas: HTMLCanvasElement) {
             ship.velocity.y *= VELOCITY_SLOWING;
         }
 
-        if (isKeyPressed.ArrowRight) ship.rotation += ROTATION_SPEED;
-        if (isKeyPressed.ArrowLeft) ship.rotation -= ROTATION_SPEED;
+        if (input.ArrowRight) ship.rotation += ROTATION_SPEED;
+        if (input.ArrowLeft) ship.rotation -= ROTATION_SPEED;
 
-        if (isKeyPressed.Space) {
+        if (input.Space) {
             bullets.push(new Bullet({
                 ctx,
                 position: {
@@ -376,7 +373,7 @@ export function startGame(canvas: HTMLCanvasElement) {
                     y: Math.sin(ship.rotation) * 8
                 }
             }));
-            isKeyPressed.Space = false;
+            input.Space = false;
         }
     }
 
@@ -449,16 +446,16 @@ export function startGame(canvas: HTMLCanvasElement) {
     document.addEventListener("keydown", (event) => {
         switch (event.key) {
             case "ArrowUp":
-                isKeyPressed.ArrowUp = true;
+                input.ArrowUp = true;
                 break;
             case "ArrowLeft":
-                isKeyPressed.ArrowLeft = true;
+                input.ArrowLeft = true;
                 break;
             case "ArrowRight":
-                isKeyPressed.ArrowRight = true;
+                input.ArrowRight = true;
                 break;
             case " ":
-                isKeyPressed.Space = true;
+                input.Space = true;
                 break;
         }
     });
@@ -466,13 +463,13 @@ export function startGame(canvas: HTMLCanvasElement) {
     document.addEventListener("keyup", (event) => {
         switch (event.key) {
             case "ArrowUp":
-                isKeyPressed.ArrowUp = false;
+                input.ArrowUp = false;
                 break;
             case "ArrowLeft":
-                isKeyPressed.ArrowLeft = false;
+                input.ArrowLeft = false;
                 break;
             case "ArrowRight":
-                isKeyPressed.ArrowRight = false;
+                input.ArrowRight = false;
                 break;
         }
     });

@@ -1,6 +1,6 @@
 import type { KeyMap } from "./state";
 
-export function createInput() {
+export function createInput(): KeyMap & { bind: () => void } {
     const keys: KeyMap = {
         ArrowUp: false,
         ArrowDown: false,
@@ -9,15 +9,44 @@ export function createInput() {
         Space: false,
     };
 
-    window.addEventListener("keydown", (e) => {
-        if (e.key in keys) keys[e.key as keyof KeyMap] = true;
-        if (e.key === " ") keys.Space = true;
-    });
+    function onKeyDown(event: KeyboardEvent) {
+        switch (event.key) {
+            case "ArrowUp":
+                keys.ArrowUp = true;
+                break;
+            case "ArrowLeft":
+                keys.ArrowLeft = true;
+                break;
+            case "ArrowRight":
+                keys.ArrowRight = true;
+                break;
+            case " ":
+                keys.Space = true;
+                break;
+        }
+    }
 
-    window.addEventListener("keyup", (e) => {
-        if (e.key in keys) keys[e.key as keyof KeyMap] = false;
-        if (e.key === " ") keys.Space = false;
-    });
+    function onKeyUp(event: KeyboardEvent) {
+        switch (event.key) {
+            case "ArrowUp":
+                keys.ArrowUp = false;
+                break;
+            case "ArrowLeft":
+                keys.ArrowLeft = false;
+                break;
+            case "ArrowRight":
+                keys.ArrowRight = false;
+                break;
+        }
+    }
 
-    return keys;
+    function bind() {
+        document.addEventListener("keydown", onKeyDown);
+        document.addEventListener("keyup", onKeyUp);
+    }
+
+    return {
+        ...keys,
+        bind,
+    };
 }
