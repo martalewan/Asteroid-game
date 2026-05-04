@@ -1,3 +1,4 @@
+import { Bullet } from "./game/Bullet";
 import { createInput } from "./game/input";
 import type { KeyMap, Vec2 } from "./game/state";
 
@@ -31,11 +32,6 @@ export function startGame(canvas: HTMLCanvasElement) {
     const MIN_SIDES = 5;
     const MAX_SIDES = 10;
     const STROKE_COLOR = "white";
-
-    // BULLET
-    const BULLET_RADIUS = 3;
-    const HEART_SIZE = 10;
-    const HEART_COLOR = "white";
 
     // =========================
     // STATE
@@ -281,55 +277,6 @@ export function startGame(canvas: HTMLCanvasElement) {
                     })
                 );
             }
-        }
-    }
-
-    // =========================
-    // BULLET
-    // =========================
-    class Bullet {
-        ctx: CanvasRenderingContext2D;
-        position: Vec2;
-        velocity: Vec2;
-        radius: number;
-
-        constructor({ ctx, position, velocity }: any) {
-            this.ctx = ctx;
-            this.position = position;
-            this.velocity = velocity;
-            this.radius = BULLET_RADIUS;
-        }
-
-        draw(): void {
-            const x = this.position.x;
-            const y = this.position.y;
-            const s = HEART_SIZE;
-
-            this.ctx.beginPath();
-
-            this.ctx.moveTo(x, y);
-
-            this.ctx.bezierCurveTo(
-                x - s / 2, y - s / 2,
-                x - s, y + s / 3,
-                x, y + s
-            );
-
-            this.ctx.bezierCurveTo(
-                x + s, y + s / 3,
-                x + s / 2, y - s / 2,
-                x, y
-            );
-
-            this.ctx.closePath();
-            this.ctx.fillStyle = HEART_COLOR;
-            this.ctx.fill();
-        }
-
-        update(): void {
-            this.draw();
-            this.position.x += this.velocity.x;
-            this.position.y += this.velocity.y;
         }
     }
 
