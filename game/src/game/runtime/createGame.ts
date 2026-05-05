@@ -8,8 +8,8 @@ import { createAsteroidSpawner } from "../handlers/asteroidSpawnerHandler";
 import { updateBullets } from "../handlers/bulletHandler";
 import { bindInput } from "../handlers/inputHandler";
 import { updateShip } from "../handlers/shipHandler";
-import { createInputState } from "../inputState";
 import { createGameStore } from "../gameStore";
+import { createInputState } from "../utils/inputState";
 
 export function createGame(canvas: HTMLCanvasElement) {
     const gameStore = createGameStore();

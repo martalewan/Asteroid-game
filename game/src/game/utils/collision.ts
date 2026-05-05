@@ -1,4 +1,4 @@
-import type { Vec2 } from "./game.types";
+import type { Vec2 } from "../core/game.types";
 
 export function isObjectCollision(
     obj1: { position: Vec2; radius: number },

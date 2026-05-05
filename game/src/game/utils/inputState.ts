@@ -1,4 +1,4 @@
-import type { InputState } from "./game.types";
+import type { InputState } from "../core/game.types";
 
 export function createInputState(): InputState {
     return {

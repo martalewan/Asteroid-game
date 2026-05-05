@@ -1,8 +1,8 @@
 import type { Asteroid } from "../entities/Asteroid";
 import type { Bullet } from "../entities/Bullet";
-import { isObjectCollision } from "../collision";
 import type { DamageState, GameActions } from "../core/game.types";
 import type { Ship } from "../entities/Ship";
+import { isObjectCollision } from "../utils/collision";
 
 export function updateAsteroids(
     asteroids: Asteroid[],
