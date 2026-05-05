@@ -1,73 +1,50 @@
-# React + TypeScript + Vite
+## Asteroid Survival
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a small browser-based asteroid survival game built with TypeScript, HTML Canvas, and React.
 
-Currently, two official plugins are available:
+The game runs on a custom engine built from scratch, with a simple game loop handling updates, rendering, and collision logic. React is used only for the UI layer (HUD, overlays, and controls), while the canvas handles all real-time gameplay rendering.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Start / pause / reset game flow
+- Ship movement and shooting
+- Asteroid spawning and splitting
+- Collision detection between ship, bullets, and asteroids
+- Score tracking (asteroids destroyed)
+- Lives system with game over state
+- React-based overlay UI on top of canvas
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Controls
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Enter → Start / Restart game  
+- Escape → Pause / Resume game  
+- R → Reset game  
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Architecture Overview
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The project is split into the following parts:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Engine: runs the game loop and handles updates/rendering
+- Entities: ship, bullets, asteroids with individual behavior
+- Handlers: game logic such as collisions and updates
+- Input system: keyboard control handling
+- Game store: central state for score, lives, and status
+- React UI layer: overlays, HUD, menus, and controls hints
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+## Rendering
+
+All gameplay is rendered on an HTML canvas. React is used only for UI elements layered on top of the canvas (HUD, menus, and overlays).
+
+---
+
+## Purpose
+
+This project was built as a learning exercise to understand how real-time game loops, entity systems, and state management work together in a browser environment without using external game engines.
