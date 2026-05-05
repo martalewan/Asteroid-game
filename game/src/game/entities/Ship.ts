@@ -1,5 +1,6 @@
-import { config } from "./config";
-import type { Vec2, InputState } from "./game.types";
+import { config } from "../core/config";
+import type { InputState, Vec2 } from "../core/game.types";
+
 
 export class Ship {
     position: Vec2;

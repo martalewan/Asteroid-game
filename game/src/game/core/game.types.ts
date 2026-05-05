@@ -1,6 +1,6 @@
-import type { Asteroid } from "./Asteroid";
-import type { Bullet } from "./Bullet";
-import type { Ship } from "./Ship";
+import type { Asteroid } from "../entities/Asteroid";
+import type { Bullet } from "../entities/Bullet";
+import type { Ship } from "../entities/Ship";
 
 export type Vec2 = { x: number; y: number };
 
@@ -38,7 +38,7 @@ export type GameEngineParams = {
     ship: Ship;
     bullets: Bullet[];
     asteroids: Asteroid[];
-    gameState: GameStateStore;
+    gameStore: GameStateStore;
     damageState: { canTakeDamage: boolean };
 
     updateShip: () => void;

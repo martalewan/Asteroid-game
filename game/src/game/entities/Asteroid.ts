@@ -1,5 +1,5 @@
-import { config } from "./config";
-import type { Vec2 } from "./game.types";
+import { config } from "../core/config";
+import type { Vec2 } from "../core/game.types";
 
 export class Asteroid {
     ctx: CanvasRenderingContext2D;

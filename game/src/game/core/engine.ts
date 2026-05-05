@@ -7,7 +7,7 @@ export function createGameEngine(params: GameEngineParams) {
         ship,
         bullets,
         asteroids,
-        gameState,
+        gameStore,
         damageState,
         updateShip,
         updateBullets,
@@ -34,7 +34,7 @@ export function createGameEngine(params: GameEngineParams) {
             asteroids,
             ship,
             bullets,
-            gameState,
+            gameStore,
             damageState
         );
     }
@@ -64,7 +64,7 @@ export function createGameEngine(params: GameEngineParams) {
             asteroids,
             ship,
             bullets,
-            gameState,
+            gameStore,
             damageState
         );
     }

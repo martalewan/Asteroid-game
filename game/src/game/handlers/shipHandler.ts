@@ -1,5 +1,5 @@
-import { Bullet } from "../Bullet";
-import type { Ship } from "../Ship";
+import { Bullet } from "../entities/Bullet";
+import type { Ship } from "../entities/Ship";
 
 export type InputState = {
     Space: boolean;

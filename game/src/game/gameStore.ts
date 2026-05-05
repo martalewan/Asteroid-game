@@ -1,6 +1,6 @@
-import type { Listener } from "./game.types";
+import type { Listener } from "./core/game.types";
 
-export function createGameState() {
+export function createGameStore() {
     const state = {
         asteroidsKilled: 0,
         lostLives: 0,

@@ -1,18 +1,18 @@
-import { bindInput } from "../game/handlers/inputHandler";
-import { updateShip } from "../game/handlers/shipHandler";
-import { updateBullets } from "../game/handlers/bulletHandler";
-import { updateAsteroids } from "../game/handlers/asteroidHandler";
-import { createInputState } from "../game/inputState";
-import { Ship } from "../game/Ship";
-import { createGameState } from "../game/state";
-import { createGameEngine } from "../game/gameEngine";
-import { createAsteroidSpawner } from "./handlers/asteroidSpawnerHandler";
-import type { Bullet } from "./Bullet";
-import type { Asteroid } from "./Asteroid";
-import type { Listener } from "./game.types";
+import { createGameEngine } from "../core/engine";
+import type { Listener } from "../core/game.types";
+import type { Asteroid } from "../entities/Asteroid";
+import type { Bullet } from "../entities/Bullet";
+import { Ship } from "../entities/Ship";
+import { updateAsteroids } from "../handlers/asteroidHandler";
+import { createAsteroidSpawner } from "../handlers/asteroidSpawnerHandler";
+import { updateBullets } from "../handlers/bulletHandler";
+import { bindInput } from "../handlers/inputHandler";
+import { updateShip } from "../handlers/shipHandler";
+import { createInputState } from "../inputState";
+import { createGameStore } from "../gameStore";
 
 export function createGame(canvas: HTMLCanvasElement) {
-    const gameState = createGameState();
+    const gameStore = createGameStore();
 
     const bullets: Bullet[] = [];
     const asteroids: Asteroid[] = [];
@@ -44,7 +44,7 @@ export function createGame(canvas: HTMLCanvasElement) {
         ship,
         bullets,
         asteroids,
-        gameState,
+        gameStore,
         damageState: { canTakeDamage: true },
         updateShip: () =>
             updateShip({ ship, input, bullets, ctx }),
@@ -75,7 +75,7 @@ export function createGame(canvas: HTMLCanvasElement) {
 
         bullets.length = 0;
         asteroids.length = 0;
-        gameState.reset?.();
+        gameStore.reset?.();
         ship.reset({
             x: canvas.width / 2,
             y: canvas.height / 2,
@@ -87,7 +87,7 @@ export function createGame(canvas: HTMLCanvasElement) {
         start,
         stop,
         reset,
-        getState: () => gameState,
-        subscribe: (l: Listener) => gameState.subscribe(l),
+        getState: () => gameStore,
+        subscribe: (l: Listener) => gameStore.subscribe(l),
     };
 }

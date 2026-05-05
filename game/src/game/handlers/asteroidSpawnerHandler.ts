@@ -1,4 +1,4 @@
-import { Asteroid } from "../Asteroid";
+import { Asteroid } from "../entities/Asteroid";
 
 type AsteroidSpawnerParams = {
     ctx: CanvasRenderingContext2D;

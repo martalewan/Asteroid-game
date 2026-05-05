@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { createGameApp } from "../game/createGameApp";
+import { createGameApp } from "../game/runtime/createGameApp";
 
 export function GameCanvas() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
