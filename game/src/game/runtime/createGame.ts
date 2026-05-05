@@ -85,13 +85,20 @@ export function createGame(canvas: HTMLCanvasElement) {
         started = false;
         paused = false;
 
+        engine.stop();
+
+        spawner.stop?.();
+
         bullets.length = 0;
         asteroids.length = 0;
+
         gameStore.reset?.();
+
         ship.reset({
             x: canvas.width / 2,
             y: canvas.height / 2,
         });
+
         engine.renderOnce();
     }
 
