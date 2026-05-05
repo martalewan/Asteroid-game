@@ -69,9 +69,5 @@ export function createGameEngine(params: GameEngineParams) {
         );
     }
 
-    return {
-        start,
-        stop,
-        renderOnce,
-    };
+    return { start, stop, renderOnce };
 }

@@ -6,17 +6,16 @@ import { HUD } from "./HUD";
 import { Overlay } from "./Overlay";
 import { ControlsHint } from "./ControlsHint";
 import { AsteroidList } from "./AsteroidList";
+import type { GameStatus } from "../game/core/game.types";
 
 export default function GameScreen() {
+    const [state, setState] = useState<GameStatus>("menu");
     const [hud, setHud] = useState({
         asteroidsKilled: 0,
         lostLives: 0,
     });
 
-    const [started, setStarted] = useState(false);
-
     const appRef = useRef<any>(null);
-    const unsubscribeRef = useRef<null | (() => void)>(null);
 
     const mountCanvas = useCallback((canvas: HTMLCanvasElement) => {
         const instance = createGameApp(canvas);
@@ -24,10 +23,15 @@ export default function GameScreen() {
 
         const store = instance.getState();
 
-        unsubscribeRef.current?.();
+        store.subscribe(() => {
+            const s = store.getState();
 
-        unsubscribeRef.current = store.subscribe(() => {
-            setHud(store.getState());
+            setHud({
+                asteroidsKilled: s.asteroidsKilled,
+                lostLives: s.lostLives,
+            });
+
+            setState(s.status);
         });
 
         appRef.current = instance;
@@ -46,16 +50,31 @@ export default function GameScreen() {
                 <ControlsHint />
             </div>
 
-
+            {/* MENU */}
             <Overlay
-                open={!started}
+                open={state === "menu"}
                 title="ASTEROID SURVIVAL"
                 actionLabel="START GAME"
+                onAction={() => appRef.current?.start()}
+            />
+
+            {/* GAME OVER */}
+            <Overlay
+                open={state === "gameover"}
+                title="GAME OVER"
+                actionLabel="RESTART"
                 onAction={() => {
-                    setStarted(true);
+                    appRef.current?.reset();
                     appRef.current?.start();
                 }}
             />
+
+            {/* PAUSE */}
+            {state === "paused" && (
+                <div className="absolute inset-0 flex items-center justify-center text-white z-50">
+                    PAUSED
+                </div>
+            )}
         </GameShell>
     );
 }

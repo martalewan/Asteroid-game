@@ -1,5 +1,4 @@
 import { createGameEngine } from "../core/engine";
-import type { Listener } from "../core/game.types";
 import type { Asteroid } from "../entities/Asteroid";
 import type { Bullet } from "../entities/Bullet";
 import { Ship } from "../entities/Ship";
@@ -46,47 +45,46 @@ export function createGame(canvas: HTMLCanvasElement) {
         asteroids,
         gameStore,
         damageState: { canTakeDamage: true },
-        updateShip: () =>
-            updateShip({ ship, input, bullets, ctx }),
+        updateShip: () => updateShip({ ship, input, bullets, ctx }),
         updateBullets,
         updateAsteroids,
     });
 
-    // STATE
-    let started = false;
-    let paused = false;
-
-    // LIFECYCLE
     function start() {
-        if (started) return;
+        if (gameStore.getState().status === "running") return;
 
-        started = true;
-        paused = false;
+        gameStore.setStatus("running");
+        engine.start();
+        spawner.start(2500);
+    }
 
+    function pause() {
+        if (gameStore.getState().status !== "running") return;
+
+        gameStore.setStatus("paused");
+        engine.stop();
+        spawner.stop?.();
+    }
+
+    function resume() {
+        if (gameStore.getState().status !== "paused") return;
+
+        gameStore.setStatus("running");
         engine.start();
         spawner.start(2500);
     }
 
     function togglePause() {
-        if (!started) return;
+        const status = gameStore.getState().status;
 
-        paused = !paused;
-
-        if (paused) {
-            engine.stop();
-            spawner.stop?.();
-        } else {
-            engine.start();
-            spawner.start(2500);
-        }
+        if (status === "running") pause();
+        else if (status === "paused") resume();
     }
 
     function reset() {
-        started = false;
-        paused = false;
+        gameStore.setStatus("menu");
 
         engine.stop();
-
         spawner.stop?.();
 
         bullets.length = 0;
@@ -102,12 +100,13 @@ export function createGame(canvas: HTMLCanvasElement) {
         engine.renderOnce();
     }
 
-
     return {
         start,
+        pause,
+        resume,
         togglePause,
         reset,
         getState: () => gameStore,
-        subscribe: (l: Listener) => gameStore.subscribe(l),
+        subscribe: gameStore.subscribe,
     };
 }

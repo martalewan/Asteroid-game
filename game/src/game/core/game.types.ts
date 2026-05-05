@@ -62,3 +62,5 @@ export type GameActions = {
 export type DamageState = {
     canTakeDamage: boolean;
 };
+
+export type GameStatus = "menu" | "running" | "paused" | "gameover";
