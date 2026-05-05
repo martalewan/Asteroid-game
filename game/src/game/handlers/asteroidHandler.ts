@@ -11,10 +11,17 @@ export function updateAsteroids(
     gameActions: GameActions,
     damageState: DamageState
 ) {
+    if (!Array.isArray(asteroids)) return;
+
     let hitThisFrame = false;
 
     for (let i = asteroids.length - 1; i >= 0; i--) {
         const asteroid = asteroids[i];
+
+        if (!asteroid || typeof asteroid.update !== "function") {
+            asteroids.splice(i, 1);
+            continue;
+        }
 
         asteroid.update();
 
@@ -41,11 +48,13 @@ export function updateAsteroids(
         // BULLET COLLISION
         // =========================
         for (let j = bullets.length - 1; j >= 0; j--) {
-            if (isObjectCollision(bullets[j], asteroid)) {
+            const bullet = bullets[j];
+
+            if (isObjectCollision(bullet, asteroid)) {
                 bullets.splice(j, 1);
 
                 if (asteroid.radius > 40) {
-                    asteroid.split();
+                    asteroid.split?.();
                 } else {
                     gameActions.addKill();
                 }
