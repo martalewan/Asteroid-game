@@ -5,6 +5,7 @@ import { GameCanvas } from "./GameCanvas";
 import { HUD } from "./HUD";
 import { Overlay } from "./Overlay";
 import { ControlsHint } from "./ControlsHint";
+import { AsteroidList } from "./AsteroidList";
 
 export default function GameScreen() {
     const [hud, setHud] = useState({
@@ -36,11 +37,15 @@ export default function GameScreen() {
         <GameShell>
             <GameCanvas onMount={mountCanvas} />
 
-            <HUD
-                asteroidsKilled={hud.asteroidsKilled}
-                lives={hud.lostLives}
-            />
-            <ControlsHint />
+            <div className="z-10">
+                <AsteroidList />
+                <HUD
+                    asteroidsKilled={hud.asteroidsKilled}
+                    lives={hud.lostLives}
+                />
+                <ControlsHint />
+            </div>
+
 
             <Overlay
                 open={!started}
