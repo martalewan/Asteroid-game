@@ -6,10 +6,10 @@ import { Ship } from "../entities/Ship";
 import { updateAsteroids } from "../handlers/asteroidHandler";
 import { createAsteroidSpawner } from "../handlers/asteroidSpawnerHandler";
 import { updateBullets } from "../handlers/bulletHandler";
-import { bindInput } from "../handlers/inputHandler";
 import { updateShip } from "../handlers/shipHandler";
 import { createGameStore } from "../gameStore";
-import { createInputState } from "../utils/inputState";
+import { createInputState } from "../input/createInputState";
+import { bindInput } from "../input/bindInput";
 
 export function createGame(canvas: HTMLCanvasElement) {
     const gameStore = createGameStore();
@@ -52,26 +52,38 @@ export function createGame(canvas: HTMLCanvasElement) {
         updateAsteroids,
     });
 
+    // STATE
     let started = false;
+    let paused = false;
 
+    // LIFECYCLE
     function start() {
         if (started) return;
+
         started = true;
+        paused = false;
 
         engine.start();
         spawner.start(2500);
     }
 
-    function stop() {
+    function togglePause() {
         if (!started) return;
-        started = false;
 
-        engine.stop();
-        spawner.stop?.();
+        paused = !paused;
+
+        if (paused) {
+            engine.stop();
+            spawner.stop?.();
+        } else {
+            engine.start();
+            spawner.start(2500);
+        }
     }
 
     function reset() {
-        stop();
+        started = false;
+        paused = false;
 
         bullets.length = 0;
         asteroids.length = 0;
@@ -83,9 +95,10 @@ export function createGame(canvas: HTMLCanvasElement) {
         engine.renderOnce();
     }
 
+
     return {
         start,
-        stop,
+        togglePause,
         reset,
         getState: () => gameStore,
         subscribe: (l: Listener) => gameStore.subscribe(l),

@@ -13,7 +13,7 @@ export function createGameStore() {
     }
 
     function addKill() {
-        state.asteroidsKilled++;
+        state.asteroidsKilled += 1;
         notify();
     }
 
@@ -23,7 +23,7 @@ export function createGameStore() {
     }
 
     function getState() {
-        return state;
+        return { ...state }
     }
 
     function subscribe(listener: Listener) {

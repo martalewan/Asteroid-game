@@ -1,4 +1,4 @@
-import type { Bullet } from "../Bullet";
+import type { Bullet } from "../entities/Bullet";
 
 export function updateBullets(bullets: Bullet[], canvas: HTMLCanvasElement) {
     for (let i = bullets.length - 1; i >= 0; i--) {

@@ -1,4 +1,4 @@
-import type { InputState } from "../game.types";
+import type { InputState } from "../core/game.types";
 
 export function bindInput(keys: InputState) {
     function onKeyDown(event: KeyboardEvent) {
@@ -35,11 +35,17 @@ export function bindInput(keys: InputState) {
         }
     }
 
-    document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("keyup", onKeyUp);
+    function enable() {
+        document.addEventListener("keydown", onKeyDown);
+        document.addEventListener("keyup", onKeyUp);
+    }
 
-    return function unbind() {
+    function disable() {
         document.removeEventListener("keydown", onKeyDown);
         document.removeEventListener("keyup", onKeyUp);
-    };
+    }
+
+    enable();
+
+    return { enable, disable };
 }

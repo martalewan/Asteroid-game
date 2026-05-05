@@ -1,7 +1,7 @@
-import { GameCanvas } from "./components/GameCanvas";
+import GameScreen from "./components/GameScreen";
 
 function App() {
-  return <GameCanvas />;
+  return <GameScreen />;
 }
 
 export default App;
