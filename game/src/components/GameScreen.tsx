@@ -23,6 +23,7 @@ export default function GameScreen() {
 
         const store = instance.getState();
 
+        if (!store) return;
         store.subscribe(() => {
             const s = store.getState();
 
